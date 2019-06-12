@@ -4,6 +4,7 @@
 #  include <string>
 #  include <vector>
 
+#include "rgb.h"
    using std::string;
    using std::vector;
 
@@ -11,21 +12,7 @@
    // Image-Related Types
    // ---------------------------------
 
-   struct RGB
-   {
-      unsigned char mRed;
-      unsigned char mGreen;
-      unsigned char mBlue;
 
-      RGB(
-         unsigned char red,
-         unsigned char green,
-         unsigned char blue
-      )  :
-         mRed(red), mGreen(green), mBlue(blue)
-      {
-      }
-   };
 
    typedef vector<RGB>      ImageRow;
    typedef vector<ImageRow> Image;
@@ -103,6 +90,7 @@
 
          enum { DEFAULT_WIDTH = 612, DEFAULT_HEIGHT = 792 };
 
+
          PDF();
          PDF(int width, int height);
 
@@ -158,6 +146,10 @@
          void drawCircle(int xCenter, int yCenter, int radius);
          void fillCircle(int xCenter, int yCenter, int radius);
 
+         //bk
+         enum {DONT_FILL = 0, FILL = 1 };
+         void drawCirclesOnPoints(const vector<XY> &points, int radius = 2, bool isFilled = DONT_FILL);
+
          void setLineColor(
             unsigned char red, unsigned char green, unsigned char blue
          );
@@ -165,6 +157,8 @@
          void setFillColor(
             unsigned char red, unsigned char green, unsigned char blue
          );
+
+         void printLogo(int x, int y, int width, int height, Image *logo);
 
          static const string FONTS[];
          static const int    N_FONTS;

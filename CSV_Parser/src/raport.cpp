@@ -13,7 +13,7 @@ const std::string currentDateTime() {
     struct tm  tstruct;
     char       buf[80];
     tstruct = *localtime(&now);
-    strftime(buf, sizeof(buf), "%X %d/%m/%Y", &tstruct);
+    strftime(buf, sizeof(buf), "%d/%m/%Y %X", &tstruct);
 
     return buf;
 }
@@ -127,7 +127,7 @@ void Raport::printHisteresisChart(int ox, int oy)
 	const int CHART_HEIGHT = 400;
 	const int CHART_WIDTH = 560;
 	this->mPdf->setFont(PDF::TIMES, 16);
-	this->mPdf->showTextXY("Histeresis chart:", ox,oy+CHART_HEIGHT+30);
+	this->mPdf->showTextXY("Histeresis chart:", ox,oy+CHART_HEIGHT+45);
 	this->mPdf->setFont(PDF::TIMES, 14);
 	Chart histeresisChart = Chart(ox,oy,CHART_WIDTH,CHART_HEIGHT);
 	histeresisChart.setMaxCurrent(1000);
@@ -148,6 +148,8 @@ bool Raport::createRaport()
 {
 	this->mPdf->setFont(PDF::TIMES_BOLD, 20);
 	this->mPdf->showTextXY("Posiflow raport summary", 200,750);
+	this->mPdf->printLogo(475,735,120,50, mLogo);
+	this->mPdf->printLogo(20,722,120,50, mLogo2);
 
 	printDate(20,700);
 	printBatch(2232321, *this->mValveNo,20,680);

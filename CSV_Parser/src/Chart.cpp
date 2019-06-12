@@ -9,8 +9,13 @@
 #include <iostream>
 
 Chart::Chart() {
-	// TODO Auto-generated constructor stub
-
+	mMAX_CURRENT = 0;
+	mMAX_FLOW = 0;
+	mOx = 0;
+	mOy = 0;
+	mPdf = NULL;
+	mWidth = 0;
+	mHeight = 0;
 }
 
 Chart::~Chart() {
@@ -25,7 +30,7 @@ bool Chart::printBackground(const std::string oxLabel, const std::string oyLabel
 	printArrowUp(mOx,mOy,6,mHeight+15);
 	printArrowLeft(mOx-6,mOy,6,mWidth+10);
 	this->mPdf->showTextXY(oxLabel, mOx +mWidth -60, mOy - 35);
-	this->mPdf->showTextXY(oyLabel, mOx-25, mOy + mHeight + 15);
+	this->mPdf->showTextXY(oyLabel, mOx-25, mOy + mHeight + 20);
 	std::string value;
 	for(int i=1; i <=10;i++)
 	{
@@ -89,7 +94,7 @@ void Chart::printHisteresisValuesOnChart(std::vector<std::vector<double>> *histe
 		{
 			if(!firstDecreasing)
 			{
-				vectorDown.push_back(XY((int)((current.at(i)*1000*mWidth/mMAX_CURRENT)+mOx),(int)(flow.at(i)*mHeight/mMAX_FLOW)+mOy)); //first decreatsing value
+				vectorDown.push_back(XY((int)((current.at(i)*1000*mWidth/mMAX_CURRENT)+mOx),(int)(flow.at(i)*mHeight/mMAX_FLOW)+mOy)); //first decreasing value
 				firstDecreasing = true;
 			}
 			vectorDown.push_back(XY(tempCurr,tempFlow));
@@ -98,9 +103,16 @@ void Chart::printHisteresisValuesOnChart(std::vector<std::vector<double>> *histe
 	}
 	this->mPdf->setLineWidth(2);
 	this->mPdf->setLineColor(0,191,255);
+	this->mPdf->setFillColor(0,191,255);
 	this->mPdf->drawLine(vectorUp);
+	this->mPdf->drawCirclesOnPoints(vectorUp, 2, PDF::FILL);
 	this->mPdf->setLineColor(220,20,60);
+	this->mPdf->setFillColor(220,20,60);
 	this->mPdf->drawLine(vectorDown);
+	this->mPdf->drawCirclesOnPoints(vectorDown,  2, PDF::FILL);
+
+
+
 }
 
 void Chart::setMaxFlow(int value)

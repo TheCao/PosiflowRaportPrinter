@@ -11,6 +11,7 @@
 
 #include "metrics.h"
 #include "pdf.h"
+#include "imageParser.h"
 
 /************************************************************
  * Using Declarations
@@ -864,6 +865,15 @@ void PDF::fillCircle(int xCenter, int yCenter, int radius)
    fillEllipse(xCenter, yCenter, radius, radius);
 }
 
+void PDF::drawCirclesOnPoints(const vector<XY> &points, int radius, bool isFilled)
+{
+	for(int i = 0, n = points.size(); i < n; i ++)
+	   {
+		if(isFilled == DONT_FILL) drawCircle(points[i].mX,points[i].mY,radius);
+		else if(isFilled == FILL) fillCircle(points[i].mX,points[i].mY,radius);
+	   }
+}
+
 void PDF::setLineColor(
    unsigned char red, unsigned char green, unsigned char blue
 )
@@ -876,4 +886,14 @@ void PDF::setFillColor(
 )
 {
    mCurrentPageContents += handleColor(red, green, blue, OP_FILL_COLOR);
+}
+
+
+void PDF::printLogo(int x, int y, int width, int height, Image *logo)
+{
+	ImageInfo info = this->processImage(*logo);
+	double xScale = width/(double)info.mWidth;
+	double yScale = height/(double)info.mHeight;
+
+	this->showImage(info, x,y,xScale, yScale);
 }
