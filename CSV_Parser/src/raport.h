@@ -25,11 +25,11 @@ class Raport
 	std::vector<double> *mLeakages;
 	std::vector<std::vector<double>> *mHisterezis;
 	unsigned *mValveNo;
-	std::vector<std::vector<RGB>> *mLogo;
-	std::vector<std::vector<RGB>> *mLogo2;
+	const std::vector<std::vector<RGB>> *mLogo;
+	const std::vector<std::vector<RGB>> *mLogo2;
 
 public:
-	Raport(std::string filename ,std::vector<double> *measurements=NULL, std::vector<double> *leakages=NULL, std::vector<std::vector<double>> *histerezis=NULL, unsigned *valveNo=0, std::vector<std::vector<RGB>> *logo=NULL, std::vector<std::vector<RGB>> *logo2=NULL, std::string directory = "", PDF *p=NULL):
+	Raport(std::string filename ,std::vector<double> *measurements=NULL, std::vector<double> *leakages=NULL, std::vector<std::vector<double>> *histerezis=NULL, unsigned *valveNo=0, const std::vector<std::vector<RGB>> *logo=NULL, const std::vector<std::vector<RGB>> *logo2=NULL, std::string directory = "", PDF *p=NULL):
 		mFileName(filename), mFileDirectory(directory), mPdf(p), mMeasurements(measurements), mLeakages(leakages), mHisterezis(histerezis), mValveNo(valveNo), mLogo(logo), mLogo2(logo2)
 		{
 			mPdf = new PDF();

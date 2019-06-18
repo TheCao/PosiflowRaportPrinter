@@ -158,7 +158,7 @@
             unsigned char red, unsigned char green, unsigned char blue
          );
 
-         void printLogo(int x, int y, int width, int height, Image *logo);
+         void printLogo(int x, int y, int width, int height, const Image *logo);
 
          static const string FONTS[];
          static const int    N_FONTS;

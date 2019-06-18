@@ -889,7 +889,7 @@ void PDF::setFillColor(
 }
 
 
-void PDF::printLogo(int x, int y, int width, int height, Image *logo)
+void PDF::printLogo(int x, int y, int width, int height, const Image *logo)
 {
 	ImageInfo info = this->processImage(*logo);
 	double xScale = width/(double)info.mWidth;

@@ -5,7 +5,9 @@
 #include <dirent.h>
 #include <boost/algorithm/string/replace.hpp>
 #include "imageParser.h"
-
+// included RGB vectors as *h files
+#include "AscoLogo.h"
+#include "EmersonLogo.h"
 
 bool createRaport(std::string fileName);
 
@@ -16,17 +18,10 @@ bool checkTestMeasurementsValues(boost::filesystem::path filePath);
 bool checkTestLeakagesValues(boost::filesystem::path filePath);
 bool parseDirectoryList(std::vector<boost::filesystem::path> *list);
 
-ImageParser emersonLogo("./grafiki/ecorp_spot_288_50mm.txt");
-ImageParser ascoLogo("./grafiki/asco.txt");
 boost::filesystem::path nokCatalogue = "./raporty_nok";
-// zrob config file ze sciezkami do katalogow i nazwami plikow
+// TODO: make config file with paths
 int main()
 {
-
-	// parse images
-	emersonLogo.parseTxtToRGB();
-	ascoLogo.parseTxtToRGB();
-
 	std::vector<boost::filesystem::path> filesPathsList;
 	while(true)
 	{
@@ -37,8 +32,6 @@ int main()
 	system("pause");
 	return 0;
 }
-
-
 
 std::vector<boost::filesystem::path> refreshFilesPathList(std::string directory)
 {
@@ -239,7 +232,7 @@ bool createRaport(std::string fileName)
 		}
 
 		// prepare pdf raport file
-		Raport raportFile(fileName+".pdf", &Measurements, &Leakage, &histerezis, &vavleNo, emersonLogo.getRGBVector(), ascoLogo.getRGBVector());
-
+		//Raport raportFile(fileName+".pdf", &Measurements, &Leakage, &histerezis, &vavleNo, emersonLogo.getRGBVector(), ascoLogo.getRGBVector());
+		Raport raportFile(fileName+".pdf", &Measurements, &Leakage, &histerezis, &vavleNo, &emersonLogoVector, &ascoLogoVector);
 		return true;
 }

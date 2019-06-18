@@ -10,6 +10,9 @@
 #include <regex>
 
 
+//logos
+#include "AscoLogo.h"
+
 void  ImageParser::parseImageToRGB()
 {
 
@@ -82,6 +85,35 @@ void ImageParser::parseTxtToRGB()
 		std::cerr << "parseTxtToRGB function error: wrong file path \n";
 	}
 
+}
+
+void ImageParser::createHeaderFile(std::string headerName)
+{
+	//create file
+	boost::filesystem::path headerPath("./"+headerName+".h");
+	boost::filesystem::create_directory(headerPath.parent_path());
+
+	boost::filesystem::ofstream file(headerPath);
+	file << "#include \"rgb.h\" \n";
+	file << "const std::vector<std::vector<RGB>> " << headerName << " = {";
+	for(auto const&vect1: mRGBVector)
+	{
+		file << "{";
+		for(auto const & vect2: vect1) //wiersz
+		{
+
+			file << "{" << (int)vect2.mRed << "," << (int)vect2.mGreen << "," << (int)vect2.mBlue << "}";
+			if(&vect2 != &vect1.back()) file << ", ";
+		}
+
+		file << "}";
+		if(&vect1 != &mRGBVector.back()) file << ", ";
+		file << "\n";
+
+	}
+	file << "};";
+	file.close();
+	std::cout << "File " << headerName << " parsed and saved! \n";
 }
 
 std::vector<std::vector<RGB>> * ImageParser::getRGBVector()

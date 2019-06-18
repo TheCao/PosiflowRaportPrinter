@@ -17,6 +17,7 @@ public:
 	ImageParser(boost::filesystem::path filePath): mFilePath(filePath) {}
 	void parseImageToRGB();
 	void parseTxtToRGB();
+	void createHeaderFile(std::string headerName);
 	std::vector<std::vector<RGB>> * getRGBVector();
 
 
