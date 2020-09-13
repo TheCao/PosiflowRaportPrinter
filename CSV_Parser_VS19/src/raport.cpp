@@ -147,23 +147,16 @@ void Raport::printBatch(long batchNo, unsigned valveNo, int ox, int oy)
 }
 bool Raport::createRaport()
 {
-	printAndLog("T1");
 	this->mPdf->setFont(PDF::TIMES_BOLD, 20);
 	this->mPdf->showTextXY("Posiflow raport summary", 200,750);
 	this->mPdf->printLogo(475,735,120,50, mLogo);
 	this->mPdf->printLogo(20,722,120,50, mLogo2);
-	printAndLog("T2");
 	printDate(20,700);
-	printAndLog("T3");
 	printBatch(this->mMeasurements->at(5), *this->mValveNo,20,680); //Measurements vector's 7 position -> Batch Number from _Dostrajanie.cvs file
-	printAndLog("T4");
 	printSetup(20, 630);
-	printAndLog("T5");
 	printLeakages("sccm/min", 350, 630);
-	printAndLog("T6");
 	//printHisteresisTable(20,500); //Old one.
 	printHisteresisChart(30,40);
-	printAndLog("T6");
 
 	saveRaport();
 	return true;

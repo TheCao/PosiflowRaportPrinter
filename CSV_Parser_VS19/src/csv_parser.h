@@ -15,7 +15,7 @@ public:
 	std::vector<std::vector<std::string> > getData();
 	bool parseValuesHisteresis(std::vector<std::vector<std::string>> * list, std::vector<double> * PWM, std::vector<double> * Flow, std::vector<double> * Current, unsigned *valveNumber);
 	bool parseValuesLeakage(std::vector<std::vector<std::string>> * list, std::vector<double> *Leakage, unsigned *valveNumber);
-	bool parseValuesFinal(std::vector<std::vector<std::string>> * list, std::vector<double> *Measurements);
+	bool parseValuesMeasurements(std::vector<std::vector<std::string>> * list, std::vector<double> *Measurements);
 
 };
 

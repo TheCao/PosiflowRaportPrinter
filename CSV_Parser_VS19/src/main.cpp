@@ -216,22 +216,18 @@ bool createRaport(std::string fileName)
 		}
 		//parse data from files
 		CSVParser parser("./raporty/"+fileName+"_Histereza.csv");
-		printAndLog("Histereza get data");
 		std::vector<std::vector<std::string>> dataList = parser.getData();
-		printAndLog("Histereza got data");
 		if(dataList.empty())
 		{
 			return false;
 		}
 		else
 		{
-			printAndLog("Histereza parsing data");
 			parser.parseValuesHisteresis(&dataList, &PWM, &Flow, &Current, &vavleNo);
 			histerezis.push_back(PWM); //at(0)
 			histerezis.push_back(Flow); //at(1)
 			histerezis.push_back(Current); //at(2)
 			moveFileToDirectory("./raporty/",fileName+"_Histereza.csv", raportyOldCatalogue);
-			printAndLog("Histereza parsed data");
 		}
 
 
@@ -249,19 +245,15 @@ bool createRaport(std::string fileName)
 
 
 		CSVParser parser3("./raporty/"+fileName+"_Dostrajanie.csv");
-		printAndLog("Dostrajanie get data");
 		std::vector<std::vector<std::string>> dataList3 = parser3.getData();
-		printAndLog("Dostrajanie got data");
 		if(dataList3.empty())
 		{
 			return false;
 		}
 		else
 		{
-			printAndLog("Dostrajanie parsing data");
-			parser3.parseValuesFinal(&dataList3, &Measurements);
+			parser3.parseValuesMeasurements(&dataList3, &Measurements);
 			moveFileToDirectory("./raporty/",fileName+"_Dostrajanie.csv", raportyOldCatalogue);
-			printAndLog("Dostrajanie parsed data");
 		}
 
 		// prepare pdf raport file

@@ -37,12 +37,12 @@ bool CSVParser::parseValuesHisteresis(std::vector<std::vector<std::string>> * li
 	list->erase(list->begin()); // remove first line with col descriptions
 	for(std::vector<std::string> vec : *list)
 	{
-		// zamiana "," na "."
+		// change "," to "."
 		boost::replace_all((*(begin(vec)+3)), ",", ".");
 		boost::replace_all((*(begin(vec)+4)), ",", ".");
 		boost::replace_all((*(begin(vec)+5)), ",", ".");
 
-		// wyłuskanie pwm, flow i current i numer zaworu
+		// get pwm, flow, current and valve no
 		*valveNumber=std::stoi(*(begin(vec)+2));
 		PWM->push_back(std::stod(*(begin(vec)+3)));
 		Flow->push_back(std::stod(*(begin(vec)+4)));
@@ -56,35 +56,55 @@ bool CSVParser::parseValuesLeakage(std::vector<std::vector<std::string>> * list,
 {
 	list->erase(list->begin()); // remove first line with col descriptions
 	std::vector<std::string> vec = list->at(0);
-	// zamiana "," na "."
+	
+	/*
+	vec[0] => date
+	vec[1] => time
+	vec[2] => valve no
+	vec[3-8] => leakages
+	vec[9] => status of leakage test
+	*/
+	// change "," to "."
 	for(auto i = end(vec)-6; i!=end(vec); i++)
 	{
 		boost::replace_all(*i, ",", ".");
 	}
 
-	*valveNumber=std::stoi(*(begin(vec)+2));
-	// wrzucenie wyników testów szczelności do jednego kontenera
-	for (int i = 3; i<=8; i++)
+	*valveNumber=std::stoi(vec.at(2));
+	// put all leakages data to one Leakage containter	 
+	for (int i = 3; i<=(vec.size()-2); i++)
 	{
-		Leakage->push_back(std::stod(*(begin(vec)+i)));
+		Leakage->push_back(std::stod(vec.at(i)));
 	}
 	return true;
 }
 
 
-// W ponizszej funkcji przy nieprawidlowym excelu wyskakuje w petli for poza zakres!
-bool CSVParser::parseValuesFinal(std::vector<std::vector<std::string>> * list, std::vector<double> *Measurements)
+bool CSVParser::parseValuesMeasurements(std::vector<std::vector<std::string>> * list, std::vector<double> *Measurements)
 {
 	list->erase(list->begin()); // remove first line with col descriptions
 	std::vector<std::string> vec = list->at(0);
-		// zamiana "," na "."
+	/*
+	vec[0] => date
+	vec[1] => time
+	vec[2] => resistance
+	vec[3] => flow
+	vec[4] => PWM
+	vec[5] => current
+	vec[6] => frequency
+	vec[7] => batch no
+	vec[8] => measurements status
+	vec[9] => histeresis status	
+	*/
+	
+	// change "," to "."
 	for(auto i = end(vec)-7; i!=end(vec); i++)
 	{
 		boost::replace_all(*i, ",", ".");
 	}
-	for (int i = 2; i<=7; i++) //Parsowanie od pozycji Rezystancja do NumerZleceniaProdukcyjnego TODO: remove hardcoded iMax value.
+	for (int i = 2; i<=(vec.size()-3); i++) //Parsing data from vec[2] to vec[7] 
 		{
-			Measurements->push_back(std::stod(*(begin(vec)+i)));
+			Measurements->push_back(std::stod(vec.at(i)));
 		}
 	return true;
 }
