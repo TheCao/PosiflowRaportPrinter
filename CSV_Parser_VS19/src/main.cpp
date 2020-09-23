@@ -19,17 +19,43 @@ bool checkTestMeasurementsValues(boost::filesystem::path filePath);
 bool checkTestLeakagesValues(boost::filesystem::path filePath);
 bool parseDirectoryList(std::vector<boost::filesystem::path> *list);
 
-const boost::filesystem::path nokCatalogue = "./raporty_nok";
-const std::string raportyCatalogue = "./raporty";
-const std::string raportyOldCatalogue = "./raporty_old/";
-// TODO: make config file with paths
-int main()
+struct paths
 {
+	 boost::filesystem::path raportyNokCatalogue;
+	 std::string raportyOldCatalogue;
+	 std::string raportyCatalogue;
+
+	//Constructor to create const paths
+	 void setData(std::string cat, std::string cat2, std::string cat3)
+	 {
+		 raportyCatalogue = cat;
+		 raportyNokCatalogue = cat2;
+		 raportyOldCatalogue = cat3;
+	 }
+
+} paths;
+
+
+int main(int argc, char** argv)
+{
+	if (argc == 4)
+	{
+		paths.setData(argv[1], argv[2], argv[3]);
+		std::string s = "Arguments provided: " + std::string(argv[1]) + ", " + std::string(argv[2])
+			+ ", " + std::string(argv[3]);
+		printAndLog(s);
+	}
+	else
+	{
+		printAndLog("No arguments provided. Using bacis ones !");
+		paths.setData("./raporty", "./raporty_nok", "./raporty_old/");
+	}
+
 	printAndLog("Program gotowy do pracy.");
 	std::vector<boost::filesystem::path> filesPathsList;
 	while(true)
 	{
-		filesPathsList = refreshFilesPathList(raportyCatalogue);
+		filesPathsList = refreshFilesPathList(paths.raportyCatalogue);
 		parseDirectoryList(&filesPathsList);
 
 	}
@@ -37,7 +63,7 @@ int main()
 	return 0;
 }
 
-std::vector<boost::filesystem::path> refreshFilesPathList(std::string directory)
+std::vector<boost::filesystem::path> refreshFilesPathList(const std::string directory)
 {
 	std::vector<boost::filesystem::path> vec;
 	for(auto &p : boost::filesystem::directory_iterator(directory))
@@ -71,9 +97,9 @@ bool checkTestMeasurementsValues(boost::filesystem::path filePath)
 			}
 			else
 			{
-				if(!boost::filesystem::exists(nokCatalogue))
+				if(!boost::filesystem::exists(paths.raportyNokCatalogue))
 				{
-					if(!boost::filesystem::create_directory(nokCatalogue))
+					if(!boost::filesystem::create_directory(paths.raportyNokCatalogue))
 					{
 						printAndLog("checkTestMeasurementsValues error: nokCatalogue not exists!");
 					}
@@ -81,16 +107,16 @@ bool checkTestMeasurementsValues(boost::filesystem::path filePath)
 
 
 				}
-				moveFileToDirectoryByPath(filePath, nokCatalogue); // move to specified folder with error test report
-				printAndLog(filePath.string() + " bledny! Przeniesiono do " + nokCatalogue.string());
+				moveFileToDirectoryByPath(filePath, paths.raportyNokCatalogue); // move to specified folder with error test report
+				printAndLog(filePath.string() + " bledny! Przeniesiono do " + paths.raportyNokCatalogue.string());
 				// check if histeresis file exsists
 				std::string tempStr = filePath.string();
 				boost::replace_all(tempStr, "Dostrajanie", "Histereza");
 				boost::filesystem::path histeresisFilePath = tempStr;
 				if(boost::filesystem::exists(histeresisFilePath))
 				{
-					moveFileToDirectoryByPath(histeresisFilePath, nokCatalogue); // move to specified folder with error test report
-					printAndLog(histeresisFilePath.string() + " bledny! Przeniesiono do " + nokCatalogue.string());
+					moveFileToDirectoryByPath(histeresisFilePath, paths.raportyNokCatalogue); // move to specified folder with error test report
+					printAndLog(histeresisFilePath.string() + " bledny! Przeniesiono do " + paths.raportyNokCatalogue.string());
 				}
 			}
 		}
@@ -121,7 +147,7 @@ bool checkTestLeakagesValues(boost::filesystem::path filePath)
 			}
 			else
 			{
-				moveFileToDirectoryByPath(filePath, nokCatalogue); // move to specified folder with error test report
+				moveFileToDirectoryByPath(filePath, paths.raportyNokCatalogue); // move to specified folder with error test report
 			}
 		}
 		catch(std::out_of_range &err)
@@ -206,9 +232,9 @@ bool createRaport(std::string fileName)
 		unsigned vavleNo;
 		std::vector<std::vector<double>> histerezis;
 
-		if(!boost::filesystem::exists(raportyOldCatalogue))
+		if(!boost::filesystem::exists(paths.raportyOldCatalogue))
 		{
-			if(!boost::filesystem::create_directory(raportyOldCatalogue))
+			if(!boost::filesystem::create_directory(paths.raportyOldCatalogue))
 			{
 				printAndLog("createRaport error: raportyOldCatalogue not exists!");
 			}
@@ -227,7 +253,7 @@ bool createRaport(std::string fileName)
 			histerezis.push_back(PWM); //at(0)
 			histerezis.push_back(Flow); //at(1)
 			histerezis.push_back(Current); //at(2)
-			moveFileToDirectory("./raporty/",fileName+"_Histereza.csv", raportyOldCatalogue);
+			moveFileToDirectory("./raporty/",fileName+"_Histereza.csv", paths.raportyOldCatalogue);
 		}
 
 
@@ -240,7 +266,7 @@ bool createRaport(std::string fileName)
 		else
 		{
 			parser2.parseValuesLeakage(&dataList2,&Leakage,&vavleNo);
-			moveFileToDirectory("./raporty/",fileName+"_Wycieki.csv", raportyOldCatalogue);
+			moveFileToDirectory("./raporty/",fileName+"_Wycieki.csv", paths.raportyOldCatalogue);
 		}
 
 
@@ -253,7 +279,7 @@ bool createRaport(std::string fileName)
 		else
 		{
 			parser3.parseValuesMeasurements(&dataList3, &Measurements);
-			moveFileToDirectory("./raporty/",fileName+"_Dostrajanie.csv", raportyOldCatalogue);
+			moveFileToDirectory("./raporty/",fileName+"_Dostrajanie.csv", paths.raportyOldCatalogue);
 		}
 
 		// prepare pdf raport file
